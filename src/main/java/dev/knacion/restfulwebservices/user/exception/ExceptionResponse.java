@@ -1,4 +1,4 @@
-package dev.knacion.restfulwebservices.exception;
+package dev.knacion.restfulwebservices.user.exception;
 
 import java.util.Date;
 

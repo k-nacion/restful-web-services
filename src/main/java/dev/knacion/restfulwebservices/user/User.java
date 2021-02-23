@@ -1,11 +1,18 @@
 package dev.knacion.restfulwebservices.user;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Objects;
 
 public class User {
 
     private Integer id;
+
+    @Size(min = 2, max = 28, message = "The name attribute should have at least a minimum of 2 characters.")
     private String name;
+
+    @Past
     private Date birthDate;
 
     public User() {
@@ -41,6 +48,26 @@ public class User {
         this.birthDate = birthDate;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!Objects.equals(id, user.id)) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        return birthDate != null ? birthDate.equals(user.birthDate) : user.birthDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {

@@ -1,11 +1,14 @@
 package dev.knacion.restfulwebservices.user;
 
 
+import dev.knacion.restfulwebservices.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -38,7 +41,7 @@ public class UserController {
 
     //POST /user
     @PostMapping
-    public ResponseEntity insertUser(@RequestBody User user) {
+    public ResponseEntity insertUser(@Valid @RequestBody User user) {
         userDaoService.save(user);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -47,7 +50,19 @@ public class UserController {
                 .toUri();
 
         ResponseEntity.BodyBuilder created = ResponseEntity.created(uri);
+
         return created.build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUserById(@PathVariable Integer id, @RequestBody @Nullable User user) {
+        User one = userDaoService.findOne(id, user);
+        if (one != null)
+            userDaoService.deleteUserById(id);
+        else
+            throw new UserNotFoundException("id=" + id);
+
+        return ResponseEntity.ok(one);
     }
 
 }
