@@ -1,11 +1,13 @@
 package dev.knacion.restfulwebservices.user;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Objects;
 
-public class User {
+public class User extends RepresentationModel<User> {
 
     private Integer id;
 
