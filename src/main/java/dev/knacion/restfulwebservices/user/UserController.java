@@ -3,6 +3,9 @@ package dev.knacion.restfulwebservices.user;
 
 import dev.knacion.restfulwebservices.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.core.ControllerEntityLinksFactoryBean;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +25,15 @@ public class UserController {
     //GET /users
     //retrieveAllUsers
     @GetMapping
-    public List<User> getAllUsers(){
-        return userDaoService.findAll();
+    public List<User> getAllUsers() {
+        List<User> all = userDaoService.findAll();
+
+        all.forEach(user -> {
+            user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getUser(user.getId())).withSelfRel());
+        });
+
+        return all;
+
     }
 
 
@@ -35,6 +45,13 @@ public class UserController {
 
         if (user == null)
             throw new UserNotFoundException("id-" + id);
+
+        //"all-users", SERVER_PATH + "/users"
+        //retrieveAllUsers
+
+//        user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers())
+//                .withRel("All-user").withSelfRel());
+
 
         return user;
     }
