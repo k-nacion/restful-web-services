@@ -21,13 +21,4 @@ public class HelloWorldConfig {
         localeResolver.setDefaultLocale(Locale.US);
         return localeResolver;
     }
-
-    @Bean
-    public ResourceBundleMessageSource source(){
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
-        return messageSource;
-    }
-
-
 }
