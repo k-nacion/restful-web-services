@@ -4,6 +4,9 @@ package dev.knacion.restfulwebservices.user;
 import dev.knacion.restfulwebservices.user.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.ControllerEntityLinksFactoryBean;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +31,13 @@ public class UserController {
     public List<User> getAllUsers() {
         List<User> all = userDaoService.findAll();
 
+        RepresentationModel<?> of = RepresentationModel.of(all);
+
         all.forEach(user -> {
-            user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getUser(user.getId())).withSelfRel());
+            if (!user.hasLink(LinkRelation.of("user-link")))
+                user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getUser(user.getId()))
+                        .withRel(LinkRelation.of("user-link"))
+                );
         });
 
         return all;
@@ -46,11 +54,13 @@ public class UserController {
         if (user == null)
             throw new UserNotFoundException("id-" + id);
 
+
         //"all-users", SERVER_PATH + "/users"
         //retrieveAllUsers
 
-//        user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers())
-//                .withRel("All-user").withSelfRel());
+        if (!user.hasLink(LinkRelation.of("all-user")))
+            user.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getAllUsers())
+                .withRel("all-user"));
 
 
         return user;
