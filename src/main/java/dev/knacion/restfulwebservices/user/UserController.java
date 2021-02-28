@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -28,10 +29,8 @@ public class UserController {
     //GET /users
     //retrieveAllUsers
     @GetMapping
-    public List<User> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> all = userDaoService.findAll();
-
-        RepresentationModel<?> of = RepresentationModel.of(all);
 
         all.forEach(user -> {
             if (!user.hasLink(LinkRelation.of("user-link")))
@@ -40,7 +39,7 @@ public class UserController {
                 );
         });
 
-        return all;
+        return ResponseEntity.ok(all);
 
     }
 
@@ -48,7 +47,7 @@ public class UserController {
     //GET /users/{id}
     //retrieveUser(int id)
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Integer id) {
+    public ResponseEntity<User> getUser(@PathVariable Integer id) {
         User user = userDaoService.findOne(id);
 
         if (user == null)
@@ -63,12 +62,12 @@ public class UserController {
                 .withRel("all-user"));
 
 
-        return user;
+        return ResponseEntity.of(Optional.of(user));
     }
 
     //POST /user
     @PostMapping
-    public ResponseEntity insertUser(@Valid @RequestBody User user) {
+    public ResponseEntity<User> insertUser(@Valid @RequestBody User user) {
         userDaoService.save(user);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -82,7 +81,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUserById(@PathVariable Integer id, @RequestBody @Nullable User user) {
+    public ResponseEntity<User> deleteUserById(@PathVariable Integer id, @RequestBody(required = false) User user) {
         User one = userDaoService.findOne(id, user);
         if (one != null)
             userDaoService.deleteUserById(id);
