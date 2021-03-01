@@ -1,5 +1,8 @@
 package dev.knacion.restfulwebservices.user;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Past;
@@ -12,9 +15,11 @@ public class User extends RepresentationModel<User> {
     private Integer id;
 
     @Size(min = 2, max = 28, message = "The name attribute should have at least a minimum of 2 characters.")
+    @ApiModelProperty(notes = "Minimum of 2 characters")
     private String name;
 
     @Past
+    @ApiModelProperty(notes = "Birthdate should be before the current date.")
     private Date birthDate;
 
     public User() {

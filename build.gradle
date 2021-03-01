@@ -20,7 +20,7 @@ dependencies {
 
 //    Browsers prefers XML format which is not ideal for the developers who uses JSON format.
 //    // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml
-//    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml'
 
 
 
