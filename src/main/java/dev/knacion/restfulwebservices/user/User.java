@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Objects;
 
+@ApiModel(description = "Details about the user")
 public class User extends RepresentationModel<User> {
 
     private Integer id;
